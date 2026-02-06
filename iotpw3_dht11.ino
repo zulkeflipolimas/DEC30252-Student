@@ -3,8 +3,8 @@
 #include <DHT.h>
 
 // WiFi credentials
-const char* ssid = "ExtendVoltrabot";
-const char* password = "r@w@1985";
+const char* ssid = "XXXXXXXX";
+const char* password = "XXXXXXX";
 
 // DHT setup
 #define DHTPIN 4
