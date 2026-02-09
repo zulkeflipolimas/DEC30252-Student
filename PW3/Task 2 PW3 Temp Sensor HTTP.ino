@@ -16,6 +16,10 @@ WebServer server(80);
 float temperature = 0.0;
 float humidity = 0.0;
 
+// TIMER untuk baca sensor
+unsigned long lastRead = 0;
+const long interval = 3000; // 3 saat
+
 void setup() {
   Serial.begin(115200);
   dht.begin();
@@ -42,6 +46,12 @@ void setup() {
 
 void loop() {
   server.handleClient();
+
+  // BACA SENSOR SETIAP 3 SAAT (TAK BERGANTUNG PADA BROWSER)
+  if (millis() - lastRead >= interval) {
+    lastRead = millis();
+    readSensor();
+  }
 }
 
 void readSensor() {
@@ -50,6 +60,8 @@ void readSensor() {
 
   if (isnan(humidity) || isnan(temperature)) {
     Serial.println("❌ Failed to read from DHT11");
+    humidity = 0;
+    temperature = 0;
     return;
   }
 
@@ -130,8 +142,7 @@ void handleRoot() {
 }
 
 void handleData() {
-  readSensor();
-
+  // HANYA HANTAR DATA, TAK BACA SENSOR
   String json = "{";
   json += "\"temperature\":" + String(temperature, 1) + ",";
   json += "\"humidity\":" + String(humidity, 1);
