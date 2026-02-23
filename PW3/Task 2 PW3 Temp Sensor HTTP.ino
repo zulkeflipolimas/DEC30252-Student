@@ -3,8 +3,8 @@
 #include <DHT.h>
 
 // WiFi credentials
-const char* ssid = "XXXXXXXX";
-const char* password = "XXXXXXX";
+const char* ssid = "_________________";
+const char* password = "_________________";
 
 // DHT setup
 #define DHTPIN 4
