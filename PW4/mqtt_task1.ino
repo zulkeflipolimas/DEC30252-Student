@@ -1,74 +1,69 @@
-#include <WiFi.h>          // Library WiFi untuk ESP32
-#include <PubSubClient.h>  // Library MQTT
+#include <WiFi.h>              // Library WiFi ESP32
+#include <PubSubClient.h>      // Library MQTT
 
 // ================= WIFI CONFIG =================
-// Nama dan password WiFi
-#define WIFI_SSID "____________"  
-#define WIFI_PASSWORD "____________"
+#define WIFI_SSID "______________"      // Nama WiFi
+#define WIFI_PASSWORD "______________"         // Password WiFi
 
 // ================= MQTT CONFIG =================
-// Alamat dan port MQTT broker
-#define MQTT_HOST "____________"
-#define MQTT_PORT 1883
+#define MQTT_HOST "______________"        // MQTT Broker
+#define MQTT_PORT 1883                   // Port MQTT (tanpa TLS)
 
-// Topic MQTT
-#define SUB_TOPIC "____________"  // Topic untuk TERIMA arahan
-#define PUB_TOPIC "____________"   // Topic untuk HANTAR status LED
+#define SUB_TOPIC "______________"    // Topic untuk TERIMA mesej
 
 // ================= HARDWARE =================
-#define LEDPIN 18  // Pin LED onboard ESP32
+#define LEDPIN 18                         // LED 1 on pin 
 
-WiFiClient espClient;                // Objek WiFi
-PubSubClient mqttClient(espClient);  // Objek MQTT guna WiFi client
+WiFiClient espClient;                    // Objek WiFi
+PubSubClient mqttClient(espClient);      // Objek MQTT
 
 // ================= WIFI FUNCTION =================
-// Fungsi untuk sambung ESP32 ke WiFi
 void connectToWifi() {
-  Serial.println("\n📶 [WIFI] Connecting...");
+  Serial.println("\n📶 [WIFI] Connecting to WiFi...");
+  WiFi.mode(WIFI_STA);                   // ESP32 sebagai client WiFi
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);  // Sambung ke WiFi
 
-  WiFi.mode(WIFI_STA);                   // ESP32 sebagai WiFi client
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);  // Mula sambung WiFi
-
-  // Tunggu sehingga WiFi berjaya disambungkan
+  // Tunggu sehingga WiFi berjaya connect
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print("⏳");
   }
 
-  // Papar status bila WiFi berjaya connect
-  Serial.println("\n✅ [WIFI] Connected");
-  Serial.println(WiFi.localIP());  // Papar IP address ESP32
+  Serial.println("\n✅ [WIFI] Connected!");
+  Serial.print("🌍 [WIFI] IP Address: ");
+  Serial.println(WiFi.localIP());
 }
 
 // ================= MQTT CONNECT FUNCTION =================
-// Fungsi untuk sambung ESP32 ke MQTT broker
 void connectToMqtt() {
-  while (!mqttClient.connected()) {  // Ulang selagi belum connected
 
-    // Client ID unik untuk elak clash
-    String clientId = "ESP32-PUBSUB-" + String(random(1000, 9999));
+  // Cuba sambung selagi MQTT belum connected
+  while (!mqttClient.connected()) {
+
+    String clientId = "ESP32-SUB-" + String(random(1000, 9999));
     Serial.print("🌐 [MQTT] Connecting as ");
     Serial.println(clientId);
 
-    // Cuba sambung ke MQTT broker
     if (mqttClient.connect(clientId.c_str())) {
+
       Serial.println("✅ [MQTT] Connected");
 
-      // Subscribe topic kawalan LED
+      // SUBSCRIBE topic (langkah PALING PENTING)
       mqttClient.subscribe(SUB_TOPIC);
-      Serial.println("📩 [SUB] esp32/led/control");
+      Serial.print("📩 [SUB] Listening to topic: ");
+      Serial.println(SUB_TOPIC);
 
     } else {
-      // Jika gagal sambung
       Serial.print("❌ [MQTT] Failed, rc=");
-      Serial.println(mqttClient.state());
-      delay(2000);  // Tunggu sebelum cuba semula
+      Serial.print(mqttClient.state());
+      Serial.println(" → retry in 2 seconds");
+      delay(2000);
     }
   }
 }
 
 // ================= MQTT CALLBACK =================
-// Fungsi ini dipanggil AUTOMATIK bila mesej MQTT diterima
+// Function ini dipanggil AUTOMATIK bila mesej diterima
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
   String message = "";
@@ -78,67 +73,57 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     message += (char)payload[i];
   }
 
-  message.toLowerCase();  // Tukar huruf ke lowercase
-  message.trim();         // Buang space / newline
+  message.toLowerCase();   // Tukar ke huruf kecil
+  message.trim();          // Buang space / newline
 
-  // Papar mesej yang diterima di Serial Monitor
-  Serial.println("\n📩 [MQTT RECEIVED]");
-  Serial.print("📌 Topic : ");
+  // Papar mesej yang diterima
+  Serial.println("\n📩 [MQTT MESSAGE RECEIVED]");
+  Serial.print("📌 Topic  : ");
   Serial.println(topic);
-  Serial.print("📝 Data  : ");
+  Serial.print("📝 Message: ");
   Serial.println(message);
 
-  // Pastikan mesej datang dari topic yang betul
-  if (String(topic) == SUB_TOPIC) {
-
-    // Jika mesej "on"
-    if (message == "on") {
-      digitalWrite(LEDPIN, HIGH);  // Hidupkan LED
-      Serial.println("💡 [LED] ON");
-
-      // Publish status LED ke broker
-      mqttClient.publish(PUB_TOPIC, "on");
-      Serial.println("📤 [PUB] LED is ON");
-    }
-
-    // Jika mesej "off"
-    else if (message == "off") {
-      digitalWrite(LEDPIN, LOW);  // Matikan LED
-      Serial.println("💡 [LED] OFF");
-
-      // Publish status LED ke broker
-      mqttClient.publish(PUB_TOPIC, "off");
-      Serial.println("📤 [PUB] LED is OFF");
-    }
+  // Contoh logic mudah (visual sahaja)
+  if (message == "on") {
+    digitalWrite(LEDPIN, HIGH);
+    Serial.println("💡 [LED] ON (command received)");
+  }
+  else if (message == "off") {
+    digitalWrite(LEDPIN, LOW);
+    Serial.println("💡 [LED] OFF (command received)");
   }
 }
 
 // ================= SETUP =================
 void setup() {
-  Serial.begin(115200);  // Mulakan Serial Monitor
-  Serial.println("⚙️ [SYSTEM] MQTT SUBSCRIBE + PUBLISH");
+  Serial.begin(115200);
+  Serial.println("⚙️ [SYSTEM] ESP32 MQTT SUBSCRIBE MODE");
 
-  pinMode(LEDPIN, OUTPUT);    // Set pin LED sebagai OUTPUT
-  digitalWrite(LEDPIN, LOW);  // LED mula dalam keadaan OFF
+  pinMode(LEDPIN, OUTPUT);       // Set LED sebagai output
+  digitalWrite(LEDPIN, LOW);     // LED mula OFF
 
-  connectToWifi();  // Sambung ke WiFi
+  connectToWifi();               // Sambung WiFi
 
-  mqttClient.setServer(MQTT_HOST, MQTT_PORT);  // Set broker dan port
-  mqttClient.setCallback(mqttCallback);        // Set fungsi callback
+  mqttClient.setServer(MQTT_HOST, MQTT_PORT); // Set broker
+  mqttClient.setCallback(mqttCallback);       // Set callback
 
-  randomSeed(micros());  // Seed random untuk client ID
+  randomSeed(micros());          // Untuk client ID rawak
 }
 
 // ================= LOOP =================
 void loop() {
 
-  // Jika WiFi terputus, sambung semula
-  if (WiFi.status() != WL_CONNECTED)
+  // Jika WiFi terputus → sambung semula
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("❌ [WIFI] Disconnected. Reconnecting...");
     connectToWifi();
+  }
 
-  // Jika MQTT terputus, sambung semula
-  if (!mqttClient.connected())
+  // Jika MQTT terputus → sambung semula
+  if (!mqttClient.connected()) {
+    Serial.println("❌ [MQTT] Disconnected. Reconnecting...");
     connectToMqtt();
+  }
 
-  mqttClient.loop();  // WAJIB untuk terima & hantar mesej MQTT
+  mqttClient.loop();   // WAJIB untuk terima mesej MQTT
 }
