@@ -2,14 +2,14 @@
 #include <PubSubClient.h>      // 🌐 Library MQTT
 
 // ================= WIFI CONFIG =================
-#define WIFI_SSID "ExtendVoltrabot"      // 📶 Nama WiFi
-#define WIFI_PASSWORD "r@w@1985"         // 🔐 Password WiFi
+#define WIFI_SSID "_______________"      // 📶 Nama WiFi
+#define WIFI_PASSWORD "_______________"         // 🔐 Password WiFi
 
 // ================= MQTT CONFIG =================
-#define MQTT_HOST "broker.emqx.io"        // 🌍 MQTT Broker
+#define MQTT_HOST "_______________"        // 🌍 MQTT Broker
 #define MQTT_PORT 1883                   // Port MQTT
 
-#define SUB_TOPIC "write_your_own_Topic_1" // 📩 Topic SUBSCRIBE
+#define SUB_TOPIC "_______________" // 📩 Topic SUBSCRIBE
 
 // ================= HARDWARE =================
 #define LED1_PIN 18                      // 💡 LED 1 (Pin 18)
