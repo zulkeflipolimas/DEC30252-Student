@@ -16,7 +16,7 @@
 #define PUB_TOPIC "____________"   // Topic untuk HANTAR status LED
 
 // ================= HARDWARE =================
-#define LEDPIN 2  // Pin LED onboard ESP32
+#define LEDPIN 18  // Pin LED onboard ESP32
 
 WiFiClient espClient;                // Objek WiFi
 PubSubClient mqttClient(espClient);  // Objek MQTT guna WiFi client
