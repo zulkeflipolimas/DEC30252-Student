@@ -74,11 +74,11 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
   if (message == "on") {
     digitalWrite(LED1_PIN, HIGH);
-    Serial.println("💡 LED 1 ON");
+    Serial.println("💡 LED ON");
   }
   else if (message == "off") {
     digitalWrite(LED1_PIN, LOW);
-    Serial.println("💡 LED 1 OFF");
+    Serial.println("💡 LED OFF");
   }
 }
 
