@@ -3,21 +3,21 @@
 #include "DHT.h"
 
 // ================= WIFI =================
-#define WIFI_SSID "ExtendVoltrabot"
-#define WIFI_PASSWORD "r@w@1985"
+#define WIFI_SSID "_______________"
+#define WIFI_PASSWORD "_____________"
 
 // ================= MQTT =================
-#define MQTT_HOST "broker.emqx.io"
+#define MQTT_HOST "_____________" //broker server address ex: broker.emqx.io
 #define MQTT_PORT 1883
 
-#define TEMP_TOPIC "your_own_temp_topic"
-#define HUM_TOPIC  "your_own_humidity_topic"
-#define SUB_TOPIC  "esp32/led/control"   // 👈 tambah ni
+#define TEMP_TOPIC  "_____________"    // topic untuk publish temperature
+#define HUM_TOPIC   "_____________"    // topic untuk publish humidity
+#define SUB_TOPIC  "______________"   // topic untuk subscribe led control
 
 // ================= HARDWARE =================
 #define DHTPIN 25
 #define DHTTYPE DHT11
-#define LED_PIN 2   // 👈 LED onboard
+#define LED_PIN 2   // 👈 LED pin
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
