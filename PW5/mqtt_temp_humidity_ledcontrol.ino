@@ -10,9 +10,9 @@
 #define MQTT_HOST "_____________" //broker server address ex: broker.emqx.io
 #define MQTT_PORT 1883
 
-#define TEMP_TOPIC  "_____________"    // topic untuk publish temperature
-#define HUM_TOPIC   "_____________"    // topic untuk publish humidity
-#define SUB_TOPIC  "______________"   // topic untuk subscribe led control
+#define TEMP_TOPIC  "_____________"    //topic untuk publish temperature
+#define HUM_TOPIC   "_____________"    //topic untuk publish humidity
+#define SUB_TOPIC  "______________"   //topic untuk subscribe led control
 
 // ================= HARDWARE =================
 #define DHTPIN 25
