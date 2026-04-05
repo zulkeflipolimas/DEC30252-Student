@@ -3,15 +3,15 @@
 #include "DHT.h"
 
 // ================= WIFI =================
-#define WIFI_SSID "ExtendVoltrabot"
-#define WIFI_PASSWORD "r@w@1985"
+#define WIFI_SSID "_______________"
+#define WIFI_PASSWORD "_____________"
 
 // ================= MQTT =================
-#define MQTT_HOST "broker.emqx.io"
+#define MQTT_HOST "_____________" //server broker address ex: broker.emqx.io
 #define MQTT_PORT 1883
 
-#define TEMP_TOPIC "your_own_temp_topic"   // 🌡️ suhu
-#define HUM_TOPIC  "your_own_humidity_topic"    // 💧 humidity
+#define TEMP_TOPIC "______________"   // 🌡️ suhu
+#define HUM_TOPIC  "______________"    // 💧 humidity
 
 // ================= HARDWARE =================
 #define DHTPIN 25
