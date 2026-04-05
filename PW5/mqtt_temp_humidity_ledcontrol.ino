@@ -7,7 +7,7 @@
 #define WIFI_PASSWORD "_____________"
 
 // ================= MQTT =================
-#define MQTT_HOST "_____________" //broker server address ex: broker.emqx.io
+#define MQTT_HOST "_____________" //broker server address > broker.emqx.io
 #define MQTT_PORT 1883
 
 #define TEMP_TOPIC  "_____________"    //topic untuk publish temperature
