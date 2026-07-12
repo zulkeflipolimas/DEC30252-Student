@@ -5,7 +5,7 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
 
   // Guna internal pull-up resistor ESP32
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(BUTTON_PIN, INPUT);
 
   Serial.begin(115200);
   Serial.println("ESP32 Push Button LED Control Started");
@@ -16,7 +16,7 @@ void loop() {
   int buttonState = digitalRead(BUTTON_PIN);
 
   // Bila button ditekan, pin jadi LOW
-  if (buttonState == LOW) {
+  if (buttonState == HIGH) {
 
     digitalWrite(LED_PIN, HIGH);
     Serial.println("Button Pressed - LED ON");
